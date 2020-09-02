@@ -1,5 +1,5 @@
 # IPCamMotionDetection
-Detect motion and capture it with an IP Camera
+Detect motion and capture it with an IP Camera.
 
 # Usage
 - `pip install opencv-python` and run `IPCam.py`
