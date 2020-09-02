@@ -1,5 +1,5 @@
 import cv2
-import OpenCV.MotionDetection.utils as utils
+import utils
 
 """
 
@@ -7,23 +7,36 @@ Motion detection with IP Camera
 
 """
 
-url = ''
+url = input('IP Camera URL: ') + '/video'
 cap = cv2.VideoCapture(url)
 
 window_size = {'obtained': False, 'wt': 0, 'ht': 0}
-WIN_NAME = 'Mobile Capture'
+WIN_NAME = 'IP Camera Feed'
 
 prev_rgb_arr = []  # For distributed step detection
 prev_rgb = []  # For area detection
 
 capture_count = 1
 
-DETECTION_SQUARE_SIZE = 100  # For distributed step detection
-DETECTION_STEP = 40  # For area detection
-DETECTION_OFFSET = 5  # The change in RGB needed to register as a motion
-CAPTURE_FILE_PATH = 'MotionDetection/captures'
+# For distributed pixel detection
+DETECTION_STEP = int(input('Detection density (Low number mean high precision but slow program. I recommend 40): '))
+
+# The change in RGB needed to register as a motion
+DETECTION_OFFSET = float(input('Detection Offset (the smaller the number the more sensitive the detection. I recommend 5): '))
+CAPTURE_FILE_PATH = input('File path for captures: ')
 FILE_NAME = 'MotionCapture'
 EXTENSION = 'jpg'
+
+VIEW_LIVE = True
+
+view_live_option = input('Would you like to view a live feed from your computer? (y/n): ')
+
+if view_live_option == 'n':
+    VIEW_LIVE = False
+
+print()
+print('IPCam has been set up! Remember to press "q" to exit the program if you are viewing live feed. Press enter the begin!')
+input()
 
 while 1:
     ret, frame = cap.read()
@@ -35,7 +48,8 @@ while 1:
 
         utils.draw_detection_step(frame, DETECTION_STEP, window_size)  # Draw the distributed detection points
 
-        cv2.imshow(WIN_NAME, frame)  # Show the live video feed from IP Camera
+        if VIEW_LIVE:
+            cv2.imshow(WIN_NAME, frame)  # Show the live video feed from IP Camera
 
         # Get the RGB values of every detection point and call this the current frame
         curr_rgb_arr = utils.all_rgb_step(frame, DETECTION_STEP, window_size)
