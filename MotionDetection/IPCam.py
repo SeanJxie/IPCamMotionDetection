@@ -7,7 +7,7 @@ Motion detection with IP Camera
 
 """
 
-url = 'http://192.168.0.32:8080/video'
+url = ''
 cap = cv2.VideoCapture(url)
 
 window_size = {'obtained': False, 'wt': 0, 'ht': 0}
