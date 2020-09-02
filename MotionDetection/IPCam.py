@@ -35,7 +35,7 @@ if view_live_option == 'n':
     VIEW_LIVE = False
 
 print()
-print('IPCam has been set up! Remember to press "q" to exit the program if you are viewing live feed. Press enter the begin!')
+print('IPCam has been set up! Remember to press "q" to exit the program if you are viewing live feed. Press enter to begin!')
 input()
 
 while 1:
