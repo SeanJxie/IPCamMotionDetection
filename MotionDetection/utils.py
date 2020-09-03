@@ -1,4 +1,4 @@
-from cv2 import rectangle, circle
+from cv2 import circle
 
 """
 
@@ -13,29 +13,44 @@ def all_rgb_step(image, step, window_size):
 
     for x in range(0, window_size['wt'], step):
         for y in range(0, window_size['ht'], step):
-            image_array.append(image[y, x])
+            image_array.append(list(image[y, x]))
 
     return image_array
 
 
-def check_image_array_change(prev, curr, offset):
-    """Check if one 2D RGB list is within some +/- offset of another"""
+def list_int_greater_than_2d(l, n):
+    """Check if any values in a 2D list l are greater than n"""
+    res = False
+
+    for i in range(len(l)):
+        if list_int_greater_than_1d(l[i], n):
+            res = True
+
+    return res
+
+
+def list_int_greater_than_1d(l, n):
+    """Check if any values in a 1D list l are greater than n"""
+    res = False
+
+    for i in range(len(l)):
+        if l[i] >= n:
+            res = True
+
+    return res
+
+
+def subtract_rgb_arrays(prev, curr):
+    difference = []
+
     for i in range(len(prev)):
-        if check_rgb_change(prev[i], curr[i], offset):
-            return True
+        difference.append(subtract_rgb(prev[i], curr[i]))
 
-        else:
-            return False
+    return difference
 
 
-def check_rgb_change(prev, curr, offset):
-    """Check if one RGB value is within some +/- offset of another"""
-    for i in range(3):
-        if not (curr[i] - offset <= prev[i] <= curr[i] + offset):
-            return True
-
-        else:
-            return False
+def subtract_rgb(prev, curr):
+    return [abs(int(a) - int(b)) for a, b in zip(prev, curr)]
 
 
 # Functions for visualization
@@ -44,10 +59,3 @@ def draw_detection_step(frame, step, window_size):
     for x in range(0, window_size['wt'] + 1, step):
         for y in range(0, window_size['ht'] + 1, step):
             circle(frame, (x, y), 1, (0, 0, 0), 1)
-
-
-def draw_detection_square(frame, square_size, window_size):
-    """Draw the square of pixels used for detection (inefficient)"""
-    p1 = window_size['wt'] // 2 - square_size // 2, window_size['ht'] // 2 - square_size // 2
-    p2 = window_size['wt'] // 2 + square_size // 2, window_size['ht'] // 2 + square_size // 2
-    rectangle(frame, p1, p2, (0, 0, 0))

@@ -22,7 +22,7 @@ capture_count = 1
 DETECTION_STEP = int(input('Detection density (Low number mean high precision but slow program. I recommend 40): '))
 
 # The change in RGB needed to register as a motion
-DETECTION_OFFSET = float(input('Detection Offset (the smaller the number the more sensitive the detection. I recommend 5): '))
+DETECTION_OFFSET = float(input('Detection Offset (the smaller the number the more sensitive the detection. I recommend 100): '))
 CAPTURE_FILE_PATH = input('File path for captures: ')
 FILE_NAME = 'MotionCapture'
 EXTENSION = 'jpg'
@@ -35,7 +35,7 @@ if view_live_option == 'n':
     VIEW_LIVE = False
 
 print()
-print('IPCam has been set up! Remember to press "q" to exit the program if you are viewing live feed. Press enter to begin!')
+print('IPCam has been set up! Remember to press "q" to exit the program if you are viewing live feed. Press enter the begin!')
 input()
 
 while 1:
@@ -48,22 +48,20 @@ while 1:
 
         utils.draw_detection_step(frame, DETECTION_STEP, window_size)  # Draw the distributed detection points
 
-        if VIEW_LIVE:
-            cv2.imshow(WIN_NAME, frame)  # Show the live video feed from IP Camera
+        cv2.imshow(WIN_NAME, frame)  # Show the live video feed from IP Camera
 
         # Get the RGB values of every detection point and call this the current frame
         curr_rgb_arr = utils.all_rgb_step(frame, DETECTION_STEP, window_size)
 
-        # If the previous array or RGB values is not empty and a motion RGB change has been detected
-        if prev_rgb_arr and utils.check_image_array_change(prev_rgb_arr, curr_rgb_arr, DETECTION_OFFSET):
-            # Print capture number
-            print(f'Movement detected {capture_count}')
+        if prev_rgb_arr:
+            frame_diff = utils.subtract_rgb_arrays(prev_rgb_arr, curr_rgb_arr)
 
-            # Write the current frame to computer
-            cv2.imwrite(f'{CAPTURE_FILE_PATH}/{FILE_NAME}{capture_count}.{EXTENSION}', frame)
+            if utils.list_int_greater_than_2d(frame_diff, DETECTION_OFFSET):
+                print(f'Motion Detected {capture_count}')
 
-            # Iterate capture count
-            capture_count += 1
+                cv2.imwrite(f'{CAPTURE_FILE_PATH}/{FILE_NAME}{capture_count}.{EXTENSION}', frame)
+
+                capture_count += 1
 
         # Set previous RGB array to current
         prev_rgb_arr = curr_rgb_arr
