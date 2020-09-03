@@ -3,7 +3,7 @@ Detect motion and capture it with an IP Camera.
 
 # Usage
 - With Python and `pip` installed, `pip install opencv-python` and run `IPCam.py` with any IDE.
-- Install [IP Webcam](https://play.google.com/store/apps/details?id=com.pas.webcam&hl=en_CA), run the app, and input the IPv4 string given to you by the app.
+- Provided that you are on the same wifi network as your mobile device, install [IP Webcam](https://play.google.com/store/apps/details?id=com.pas.webcam&hl=en_CA), run the app, and input the IPv4 string given to you by the app.
 - Specify detection inputs, file path, and you're done.
 
 # Executable
